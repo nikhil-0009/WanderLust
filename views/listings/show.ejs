@@ -1,0 +1,327 @@
+<% layout("/layouts/boilerplate") %>
+
+<style>
+  .details-container {
+    font-family: "Arial", sans-serif;
+    background-color: #fff;
+    max-width: 900px;
+    width: 100%;
+    border-radius: 16px;
+    box-shadow: 0 2px 20px rgba(72, 72, 72, 0.12);
+    padding: 2rem 2.5rem 3rem;
+    margin: 3rem auto;
+    color: #484848;
+  }
+
+  .top-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+  }
+
+  .top-actions form {
+    margin-right: 1rem;
+  }
+
+  .button {
+    background-color: #ff385c;
+    border: none;
+    color: white;
+    padding: 0.65rem 1.5rem;
+    font-weight: 600;
+    font-size: 1rem;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(255, 56, 92, 0.4);
+    transition: background-color 0.25s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin: auto;
+  }
+
+  .button:hover {
+    background-color: #e31c5f;
+  }
+
+  .listing-image {
+    width: 100%;
+    height: 420px;
+    object-fit: cover;
+    border-radius: 16px;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+  }
+
+  .details-header {
+    margin-bottom: 2rem;
+  }
+
+  .details-header h1 {
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: #222;
+    margin-bottom: 0.8rem;
+  }
+
+  .details-header h3 {
+    font-weight: 500;
+    color: #666;
+    margin-bottom: 0.4rem;
+  }
+
+  .details-header p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #717171;
+  }
+
+  .reviews-section {
+    margin-top: 3rem;
+    border-top: 1px solid #ddd;
+    padding-top: 2rem;
+    text-align: center;
+  }
+
+  .reviews-section h2 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #222;
+    margin-bottom: 1rem;
+  }
+
+  .review-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
+  }
+
+  .review-card {
+    background-color: #fafafa;
+    padding: 1rem 1.2rem;
+    border-radius: 10px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+    text-align: left;
+  }
+
+  .review-card strong {
+    font-size: 1rem;
+    color: #222;
+  }
+
+  .review-card p {
+    margin-top: 0.4rem;
+    color: #555;
+    line-height: 2;
+  }
+
+  .new-review-form {
+    margin-top: 2rem;
+  }
+
+  .new-review-form form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .new-review-form label {
+    font-weight: 500;
+    color: #333;
+  }
+
+  .new-review-form input[type="range"] {
+    width: 200px;
+  }
+
+  .new-review-form textarea {
+    padding: 0.6rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    resize: vertical;
+    min-height: 100px;
+    width: 80%;
+  }
+
+  .delete-button {
+    margin-top: 1rem;
+    text-align: right;
+  }
+  /* Base button style */
+.btn {
+  font-family: 'Nunito Sans', sans-serif;
+  font-weight: 600;
+  font-size: 0.70rem;
+  border: 0;
+  border-radius: 8px;
+  padding: 7px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease, box-shadow 0.1s ease;
+}
+
+/* Delete button style */
+.btn-delete {
+  background-color: #FF5A5F; /* Airbnb red */
+  color: #FFFFFF;
+}
+
+.btn-delete i {
+  font-size: 1rem;
+}
+
+/* Hover state */
+.btn-delete:hover {
+  background-color: #E0484E; /* Slightly darker red */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+/* Active/Pressed State */
+.btn-delete:active {
+  background-color: #C63736; /* Even darker on press */
+}
+
+/* Disabled State */
+.btn-delete:disabled {
+  background-color: #F0F0F0;
+  color: #A0A0A0;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Focus state for keyboard users */
+.btn-delete:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255, 90, 95, 0.3);
+}
+
+  @media (max-width: 768px) {
+    .review-card {
+      flex: 1 1 100%;
+    }
+  }
+</style>
+
+<div class="details-container">
+  <%if(currUser && currUser._id.equals(listing.owner._id)){ %>
+  <div class="top-actions">
+    <form action="/listings/<%= listing.id %>/edit" method="get">
+      <button class="button" type="submit">Edit Listing</button>
+    </form>
+    <form action="/listings/<%= listing.id %>?_method=DELETE" method="post">
+      <button class="button" type="submit">Delete</button>
+    </form>
+  </div>
+  <%}%>
+  <img
+    class="listing-image"
+    src="<%= listing.image.url %>"
+    alt="<%= listing.title %>"
+  />
+
+  <div class="details-header">
+    <i>Listed By: <%= listing.owner.username %></i>
+    <h1><%= listing.title %></h1>
+    <h3>₹ <%= listing.price %> / night</h3>
+    <h3><%= listing.location %>, <%= listing.country %></h3>
+    <p><%= listing.description %></p>
+  </div>
+  <%if(currUser){%>
+  <div class="new-review-form">
+    <h3>Leave a Review</h3>
+    <form action="/listings/<%= listing.id %>/reviews" method="POST">
+      <div>
+        <label for="rating"></label><br />
+        <fieldset class="starability-slot">
+          <input
+            type="radio"
+            id="no-rate"
+            class="input-no-rate"
+            name="review[rating]"
+            value="1"
+            checked
+            aria-label="No rating."
+          />
+          <input
+            type="radio"
+            id="first-rate1"
+            name="review[rating]"
+            value="1"
+          />
+          <label for="first-rate1" title="Terrible"> </label>
+          <input
+            type="radio"
+            id="first-rate2"
+            name="review[rating]"
+            value="2"
+          />
+          <label for="first-rate2" title="Not good"></label>
+          <input
+            type="radio"
+            id="first-rate3"
+            name="review[rating]"
+            value="3"
+          />
+          <label for="first-rate3" title="Average"></label>
+          <input
+            type="radio"
+            id="first-rate4"
+            name="review[rating]"
+            value="4"
+          />
+          <label for="first-rate4" title="Very good"></label>
+          <input
+            type="radio"
+            id="first-rate5"
+            name="review[rating]"
+            value="5"
+          />
+          <label for="first-rate5" title="Amazing"></label>
+        </fieldset>
+      </div>
+      <div>
+        <label for="comment">Comment</label><br />
+        <textarea name="review[comment]" id="comment" required></textarea>
+      </div>
+      <button class="button" type="submit">Submit Review</button>
+    </form>
+  </div>
+  <%}%>
+  <!-- Displaying reviews -->
+  <div class="reviews-section">
+    <h2>Reviews</h2>
+    <% if (listing.reviews && listing.reviews.length > 0) { %>
+    <div class="review-grid">
+      <% listing.reviews.slice().reverse().forEach(review => { %>
+      <div class="review-card">
+        <h3>@<%= review.author.username %></h3>
+        <br />
+        <strong>⭐ Rating: <%= review.rating || review.ratings %>/5</strong>
+        <p
+          class="starability-result"
+          data-rating="<%= review.rating || review.ratings %>"
+        ></p>
+        <p><%= review.comment %></p>
+        <% if (currUser) { %>
+  <form
+    action="/listings/<%= listing.id %>/reviews/<%= review.id %>?_method=DELETE"
+    method="post"
+  >
+    <button class="btn btn-delete">
+      <i class="fas fa-trash-alt" aria-hidden="true"></i>
+      <span>Delete Review</span>
+    </button>
+  </form>
+<% } %>
+      </div>
+      <% }) %>
+    </div>
+    <% } else { %>
+    <p><b>No reviews yet. Be the first to leave one!</b></p>
+    <% } %>
+  </div>
+</div>

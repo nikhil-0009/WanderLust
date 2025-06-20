@@ -1,0 +1,178 @@
+<%layout("/layouts/boilerplate")%>
+<style>
+  .edit-container {
+    max-width: 600px;
+    margin: 3rem auto;
+    background-color: #fff;
+    padding: 2.5rem 3rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 14px rgba(72, 72, 72, 0.1);
+    font-family: 'Arial', sans-serif;
+    color: #484848;
+  }
+
+  h1 {
+    font-weight: 700;
+    font-size: 2.2rem;
+    margin-bottom: 2rem;
+    color: #222;
+    text-align: center;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+
+  .input-group {
+    display: flex;
+    flex-direction: column;
+  }
+
+  input[type="text"],
+  input[type="number"],
+  textarea {
+    font-size: 1rem;
+    padding: 0.7rem 1rem;
+    border-radius: 8px;
+    border: 1.5px solid #ddd;
+    transition: 0.3s ease;
+    font-family: 'Arial', sans-serif;
+    color: #484848;
+  }
+
+  input[type="text"]:focus,
+  input[type="number"]:focus,
+  textarea:focus {
+    outline: none;
+    border-color: #ff385c;
+    box-shadow: 0 0 5px rgba(255, 56, 92, 0.4);
+  }
+
+  textarea {
+    min-height: 120px;
+    resize: vertical;
+  }
+
+  .valid {
+    background-color: #e6ffed;
+    border-color: #28a745;
+  }
+
+  .invalid {
+    background-color: #ffe6e6;
+    border-color: #dc3545;
+  }
+
+  .feedback {
+    font-size: 0.85rem;
+    margin-top: 4px;
+  }
+
+  .success-message {
+    color: #28a745;
+  }
+
+  .error-message {
+    color: #dc3545;
+  }
+
+  button {
+    background-color: #ff385c;
+    border: none;
+    color: white;
+    padding: 0.7rem 1.5rem;
+    font-weight: 600;
+    font-size: 1.1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(255, 56, 92, 0.4);
+    transition: background-color 0.25s ease;
+  }
+
+  button:hover {
+    background-color: #e31c5f;
+  }
+</style>
+
+<div class="edit-container">
+  <h1>Editing the Listing</h1>
+  <form id="editForm" action="/listings/<%= list.id %>/?_method=PATCH" method="POST" novalidate enctype="multipart/form-data">
+    <div class="input-group">
+      <input type="text" name="listing[title]" id="title" value="<%= list.title %>" placeholder="Enter the title" required />
+      <div class="feedback"></div>
+    </div>
+
+    <div class="input-group">
+      <textarea name="listing[description]" id="description" placeholder="Enter the description" required><%= list.description %></textarea>
+      <div class="feedback"></div>
+    </div>
+
+    <div class="input-group">
+      <p>Orignal Image</p>
+      <img src="<%= orignalImage%>" width="250" height="200" alt="">
+      
+    </div>
+    <div class="input-group">
+      <input type="file" name="listing[image]" id="image" " placeholder="Enter the image URL" />
+      <div class="feedback"></div>
+    </div>
+
+    <div class="input-group">
+      <input type="number" name="listing[price]" id="price" value="<%= list.price %>" placeholder="Enter the price" required />
+      <div class="feedback"></div>
+    </div>
+
+    <div class="input-group">
+      <input type="text" name="listing[location]" id="location" value="<%= list.location %>" placeholder="Enter the location" required />
+      <div class="feedback"></div>
+    </div>
+
+    <div class="input-group">
+      <input type="text" name="listing[country]" id="country" value="<%= list.country %>" placeholder="Enter the country" required />
+      <div class="feedback"></div>
+    </div>
+
+    <button type="submit">Update Listing</button>
+  </form>
+</div>
+
+<script>
+  const form = document.getElementById('editForm');
+  const inputs = form.querySelectorAll('input[required], textarea[required], input[type="number"]');
+
+  function validateInput(input) {
+    const feedback = input.parentElement.querySelector('.feedback');
+    if (input.checkValidity()) {
+      input.classList.remove('invalid');
+      input.classList.add('valid');
+      feedback.textContent = "✓ Looks good!";
+      feedback.className = 'feedback success-message';
+    } else {
+      input.classList.remove('valid');
+      input.classList.add('invalid');
+      feedback.textContent = "❌ This field is required or invalid.";
+      feedback.className = 'feedback error-message';
+    }
+  }
+
+  inputs.forEach(input => {
+    input.addEventListener('input', () => validateInput(input));
+  });
+
+  form.addEventListener('submit', e => {
+    let formValid = true;
+    inputs.forEach(input => {
+      validateInput(input);
+      if (!input.checkValidity()) {
+        formValid = false;
+      }
+    });
+
+    if (!formValid) {
+      e.preventDefault(); // prevent submission if validation fails
+    }
+  });
+</script>
+<!-- value="<%= typeof list.image === 'object' ? list.image.url : list.image %> -->

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Footer Page</title>
+  <style>
+    footer {
+      background-color: #f7f7f7;
+      padding: 2rem;
+      margin-top: 4rem;
+      border-top: 1px solid #e4e4e4;
+      font-family: Arial, sans-serif;
+    }
+
+    .footer-container {
+      max-width: 1200px;
+      margin: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      justify-content: center;
+    }
+
+    .footer-links a {
+      text-decoration: none;
+      color: #555;
+      font-size: 0.95rem;
+      transition: color 0.3s;
+    }
+
+    .footer-links a:hover {
+      color: #ff385c;
+    }
+
+    .footer-info p {
+      color: #888;
+      font-size: 0.9rem;
+      margin: 0;
+    }
+
+    @media (max-width: 600px) {
+      .footer-links {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <footer>
+    <div class="footer-container">
+      <div class="footer-links">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Sitemap</a>
+        <a href="#">Company Details</a>
+      </div>
+      <div class="footer-info">
+        <p>&copy; 2025 WanderLust. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

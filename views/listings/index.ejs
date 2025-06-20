@@ -1,0 +1,120 @@
+<%layout("/layouts/boilerplate")%>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f6f6f6;
+    margin: 0;
+    padding: 0;
+  }
+
+  h2 {
+    text-align: center;
+    margin: 2rem 0 1rem;
+  }
+
+  .wrapper {
+    padding: 0 2rem;
+  }
+
+  .container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+  }
+
+  .card {
+    background-color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out;
+  }
+
+  .card:hover {
+    transform: translateY(-5px);
+  }
+
+  .card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+  }
+
+  .card-content {
+    padding: 1rem;
+  }
+
+  .card-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+  }
+
+  .card-description {
+    font-size: 0.95rem;
+    color: #555;
+    margin-bottom: 0.5rem;
+  }
+
+  .card-location {
+    font-size: 0.9rem;
+    color: #888;
+    margin-bottom: 0.5rem;
+  }
+
+  .card-price {
+    color: #ff385c;
+    font-weight: bold;
+    font-size: 1rem;
+  }
+
+  .card-buttons {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .card-buttons a {
+    text-decoration: none;
+    color: white;
+    background-color: #007bff;
+    padding: 0.4rem 1rem;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    transition: background-color 0.3s;
+  }
+
+  .card-buttons a:hover {
+    background-color: #0056b3;
+  }
+</style>
+
+<body>
+  <div class="wrapper">
+    <h2>All Listings</h2>
+    <div class="container">
+      <% allListings.forEach(listing => { %>
+        <div class="card"onclick="window.location.href='/listings/<%= listing._id %>'" role="link" tabindex="0">
+          <img src="<%= listing.image.url %>" alt="<%= listing.title %>" />
+          <div class="card-content">
+            <div class="card-title"><%= listing.title %></div>
+            <div class="card-description"><%= listing.description.substring(0, 60) %>...</div>
+            <div class="card-location"><%= listing.location %>, <%= listing.country %></div>
+            <div class="card-price">₹ <%= listing.price %>/night</div>
+            <div class="card-buttons">
+              <a href="/listings/<%= listing._id %>">View</a>
+              <a href="/listings/<%= listing._id %>/edit">Edit</a>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+  <script>
+    document.querySelectorAll('.card[role="link"]').forEach(el => {
+  el.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') window.location = el.onclick.toString().match(/'(.+)'/)[1];
+  });
+});
+  </script>
+</body>

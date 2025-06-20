@@ -1,0 +1,68 @@
+<style>
+  .success-message {
+    position: relative;
+    background-color: #dff5e1; /* soft green */
+    border: 1px solid #34c471;
+    color: #065f46;
+    padding: 12px 40px 12px 16px;
+    margin: 20px auto;
+    border-radius: 8px;
+    font-family: 'Helvetica Neue', sans-serif;
+    font-size: 16px;
+    max-width: 400px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    text-align: center;
+  }
+
+  .error-message {
+    position: relative;
+    background-color: #ffe8e6; /* soft red/pink */
+    border: 1px solid #ff5a5f; /* Airbnb red */
+    color: #c1272d; /* dark red text */
+    padding: 12px 40px 12px 16px;
+    margin: 20px auto;
+    border-radius: 8px;
+    font-family: 'Helvetica Neue', sans-serif;
+    font-size: 16px;
+    max-width: 400px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    text-align: center;
+  }
+
+  .dismiss-btn {
+    position: absolute;
+    top: 10px;
+    right: 14px;
+    background: transparent;
+    border: none;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  .success-message .dismiss-btn {
+    color: #065f46;
+  }
+
+  .error-message .dismiss-btn {
+    color: #c1272d;
+  }
+
+  .dismiss-btn:hover {
+    color: #000000;
+  }
+</style>
+
+<% if (success && success.length) { %>
+  <div class="success-message" id="successBox">
+    <button class="dismiss-btn" onclick="document.getElementById('successBox').style.display='none';">&times;</button>
+    <%= success %>
+  </div>
+<% } %>
+
+<% if (error && error.length) { %>
+  <div class="error-message" id="errorBox">
+    <button class="dismiss-btn" onclick="document.getElementById('errorBox').style.display='none';">&times;</button>
+    <%= error %>
+  </div>
+<% } %>

@@ -1,0 +1,160 @@
+<%layout("/layouts/boilerplate")%>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f6f6f6;
+    padding: 2rem;
+  }
+
+  .form-container {
+    max-width: 600px;
+    margin: 10px auto;
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  }
+
+  h3 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 1.5rem;
+  }
+
+  form input,
+  form textarea {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: 0.3s ease;
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 100px;
+  }
+
+  .input-group {
+    margin-bottom: 1.2rem;
+    position: relative;
+  }
+
+  .valid {
+    background-color: #e6ffed;
+    border: 1px solid #28a745;
+  }
+
+  .invalid {
+    border: 1px solid #dc3545;
+    background-color: #ffe6e6;
+  }
+
+  .error-message,
+  .success-message {
+    font-size: 0.9rem;
+    margin-top: 4px;
+  }
+
+  .error-message {
+    color: #dc3545;
+  }
+
+  .success-message {
+    color: #28a745;
+  }
+
+  button {
+    background-color: #007bff;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    width: 100%;
+  }
+
+  button:hover {
+    background-color: #0056b3;
+  }
+</style>
+
+<body>
+  <div class="form-container">
+    <h3>Create a New Listing</h3>
+    <form id="listingForm" action="/listings/new" method="POST" novalidate enctype="multipart/form-data">
+      <div class="input-group">
+        <input type="text" name="listing[title]" id="title" placeholder="Enter the title" required>
+        <div class="feedback"></div>
+      </div>
+
+      <div class="input-group">
+        <textarea name="listing[description]" id="description" placeholder="Enter the description" required></textarea>
+        <div class="feedback"></div>
+      </div>
+
+      <div class="input-group">
+        <input type="file" name="listing[image]" id="image" required>
+        <div class="feedback"></div>
+      </div>
+
+      <div class="input-group">
+        <input type="number" name="listing[price]" id="price" placeholder="Enter the price" required>
+        <div class="feedback"></div>
+      </div>
+
+      <div class="input-group">
+        <input type="text" name="listing[location]" id="location" placeholder="Enter the location" required>
+        <div class="feedback"></div>
+      </div>
+
+      <div class="input-group">
+        <input type="text" name="listing[country]" id="country" placeholder="Enter the country" required>
+        <div class="feedback"></div>
+      </div>
+
+      <button type="submit">Submit Listing</button>
+    </form>
+  </div>
+
+  <script>
+    const form = document.getElementById('listingForm');
+    const inputs = form.querySelectorAll('input[required], textarea[required], input[type="number"]');
+
+    function validateInput(input) {
+      const feedback = input.parentElement.querySelector('.feedback');
+      if (input.checkValidity()) {
+        input.classList.remove('invalid');
+        input.classList.add('valid');
+        feedback.textContent = "✓ Looks good!";
+        feedback.className = 'feedback success-message';
+      } else {
+        input.classList.remove('valid');
+        input.classList.add('invalid');
+        feedback.textContent = "❌ This field is required or invalid.";
+        feedback.className = 'feedback error-message';
+      }
+    }
+
+    inputs.forEach(input => {
+      input.addEventListener('input', () => validateInput(input));
+    });
+
+    form.addEventListener('submit', e => {
+      let formValid = true;
+      inputs.forEach(input => {
+        validateInput(input);
+        if (!input.checkValidity()) {
+          formValid = false;
+        }
+      });
+
+      if (!formValid) {
+        e.preventDefault(); // Prevent submission if any input is invalid
+      }
+    });
+  </script>
+</body>
