@@ -1,5 +1,5 @@
-// functions/server.js
-const serverless = require('serverless-http');
-const app = require('../app'); // your Express setup in app.js
+const { builder } = require("@netlify/express");
+const app = require("../app"); // your Express app
 
-module.exports.handler = serverless(app);
+// Wrap Express with Netlify's adapter
+exports.handler = builder(app);
