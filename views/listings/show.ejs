@@ -328,3 +328,28 @@
     <% } %>
   </div>
 </div>
+
+<script>
+  // Redirect to /listings if user presses the back button (optional, based on your earlier intent)
+  history.pushState(null, '', location.href);
+  window.addEventListener('popstate', function () {
+    history.pushState(null, '', location.href);
+    window.location.replace('/listings');
+  });
+
+  // Clear review form fields if navigated via back/forward (bfcache)
+  window.addEventListener('pageshow', function (event) {
+    const isBackNav = event.persisted ||
+      (performance.getEntriesByType("navigation")[0]?.type === "back_forward");
+
+    if (isBackNav) {
+      const reviewForm = document.querySelector('form[action*="/reviews"]');
+      if (reviewForm) {
+        reviewForm.reset();
+
+        // Optional: If you're showing any validation or status messages inside .feedback, clear them
+        document.querySelectorAll('.feedback').forEach(el => el.textContent = '');
+      }
+    }
+  });
+</script>

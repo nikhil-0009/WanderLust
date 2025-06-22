@@ -174,5 +174,12 @@
       e.preventDefault(); // prevent submission if validation fails
     }
   });
+  history.pushState(null, '', location.href);
+
+  // Always redirect back to /listings when user tries to go back
+  window.addEventListener('popstate', function () {
+    history.pushState(null, '', location.href); // Trap them again
+    window.location.replace('/listings');       // Force redirect
+  });
 </script>
 <!-- value="<%= typeof list.image === 'object' ? list.image.url : list.image %> -->

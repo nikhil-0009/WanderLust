@@ -120,41 +120,68 @@
     </form>
   </div>
 
-  <script>
-    const form = document.getElementById('listingForm');
-    const inputs = form.querySelectorAll('input[required], textarea[required], input[type="number"]');
+ <script>
+  window.addEventListener('pageshow', (event) => {
+    // Detect if page was restored from Back/Forward cache
+    const isBackNav = event.persisted || 
+      (window.performance && performance.getEntriesByType("navigation")[0]?.type === "back_forward");
 
-    function validateInput(input) {
-      const feedback = input.parentElement.querySelector('.feedback');
-      if (input.checkValidity()) {
-        input.classList.remove('invalid');
-        input.classList.add('valid');
-        feedback.textContent = "✓ Looks good!";
-        feedback.className = 'feedback success-message';
-      } else {
-        input.classList.remove('valid');
-        input.classList.add('invalid');
-        feedback.textContent = "❌ This field is required or invalid.";
-        feedback.className = 'feedback error-message';
+    if (isBackNav) {
+      const form = document.getElementById('listingForm');
+      if (form) {
+        form.reset();
+
+        // Clear all feedback messages
+        document.querySelectorAll('.feedback').forEach(el => el.textContent = '');
+
+        // Remove all validation classes
+        form.querySelectorAll('.valid, .invalid').forEach(input => {
+          input.classList.remove('valid', 'invalid');
+        });
       }
     }
+  });
 
+  const form = document.getElementById('listingForm');
+  const inputs = form.querySelectorAll('input[required], textarea[required], input[type="number"]');
+
+  function validateInput(input) {
+    const feedback = input.parentElement.querySelector('.feedback');
+    if (input.checkValidity()) {
+      input.classList.remove('invalid');
+      input.classList.add('valid');
+      feedback.textContent = "✓ Looks good!";
+      feedback.className = 'feedback success-message';
+    } else {
+      input.classList.remove('valid');
+      input.classList.add('invalid');
+      feedback.textContent = "❌ This field is required or invalid.";
+      feedback.className = 'feedback error-message';
+    }
+  }
+
+  inputs.forEach(input => {
+    input.addEventListener('input', () => validateInput(input));
+  });
+
+  form.addEventListener('submit', e => {
+    let formValid = true;
     inputs.forEach(input => {
-      input.addEventListener('input', () => validateInput(input));
-    });
-
-    form.addEventListener('submit', e => {
-      let formValid = true;
-      inputs.forEach(input => {
-        validateInput(input);
-        if (!input.checkValidity()) {
-          formValid = false;
-        }
-      });
-
-      if (!formValid) {
-        e.preventDefault(); // Prevent submission if any input is invalid
+      validateInput(input);
+      if (!input.checkValidity()) {
+        formValid = false;
       }
     });
-  </script>
+
+    if (!formValid) {
+      e.preventDefault(); // prevent submission
+    } else {
+      const submitButton = form.querySelector('button[type="submit"]');
+      submitButton.disabled = true;
+      submitButton.innerText = 'Submitting...';
+      submitButton.style.opacity = '0.7';
+      submitButton.style.cursor = 'not-allowed';
+    }
+  });
+</script>
 </body>
